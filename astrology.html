@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+        <title>DNOO37</title>
+    </head>
+    <body>
+        <nav>
+            <h1><a href="index.html">Sara Goldzveig</a></h1>
+            <select onchange="location = this.value;">
+                <option value="index.html">INDEX</option>
+                <option value="astrology.html" selected>ASTROLOGY</option>
+                <option value="astronomy.html">ASTRONOMY</option>
+                <option value="earthquakes.html">EARTHQUAKES</option>
+                <option value="weather.html">WEATHER</option>
+            </select>
+        </nav>
+        <header style="display: none;">
+            <div>Marque uno:</div>
+            <div><input type="radio" name="selecciona" value="todos" checked />Todos</div>
+            <div><input type="radio" name="selecciona" value="agua" />Agua</div>
+            <div><input type="radio" name="selecciona" value="aire" />Aire</div>
+            <div><input type="radio" name="selecciona" value="fuego" />Fuego</div>
+            <div><input type="radio" name="selecciona" value="tierra" />Tierra</div>
+        </header>
+        <aside></aside>
+        <main></main>
+        <script>
+            const alternativas = document.querySelector("header");
+            const detalles = document.querySelector("aside");
+            const respuesta = document.querySelector("main");
+            var datos;
+            async function estudiantes() {
+                const data = await fetch("https://raw.githubusercontent.com/profesorfaco/dno037-2023-2/main/clase-07/_curso.json");
+                datos = await data.json();
+                alternativas.removeAttribute("style");
+                datos.forEach((x) => {
+                    if(x.zodiaco.signo.split !== ""){
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                    }
+                });
+            }
+            estudiantes().catch((error) => console.error(error));
+
+            function compatibilidad(valor) {
+                respuesta.innerHTML = ``;
+                detalles.innerHTML = ``;
+
+                //Lo que sigue lo saqué de https://www.clara.es/
+
+                if (valor == "fuego") {
+                    about =
+                        "<em>Con signo de fuego (Aries, Leo y Sagitario)</em>: Tienen una forma muy particular de desenvolverse en ambientes laborales. Son individualistas y confían mucho en sus capacidades, lo que en ocasiones puede llegar a hacerlos ver algo arrogantes, apasionados y enérgicos. Se llevan bien con signos de aire, ya que comparten la vitalidad y la comunicación. Con signos de tierra, pueden construir relaciones sólidas al combinar la pasión con la estabilidad. Sin embargo, pueden chocar con signos de agua debido a sus diferencias emocionales y con otros signos de fuego por la competencia.";
+                } else if (valor == "agua") {
+                    about =
+                        "<em>Con signo de agua (Cáncer, Escorpio y Piscis)</em>: Pueden pasar desapercibidos en el trabajo, pero son esenciales para que todo salga adelante. Fluyen con emociones profundas y sensibilidad. Son altamente compatibles entre sí debido a su naturaleza emocional y empática. Comparten una comprensión intuitiva de las emociones y la espiritualidad, lo que les permite conectarse profundamente. Con signos de tierra, aportan una dimensión emocional a la estabilidad terrenal. Con signos de fuego, añaden profundidad y sensibilidad a la pasión. Con signos de aire, encuentran un equilibrio entre la emotividad y la comunicación. Estas combinaciones pueden dar lugar a relaciones enriquecedoras y equilibradas.";
+                } else if (valor == "aire") {
+                    about =
+                        "<em>Con signo de aire (Géminis, Libra y Acuario)</em>: Son idealistas por naturaleza. Aportan gran entusiasmo y dedicación a aquello que les interesa, aportando ideas renovadoras que pueden cambiar un puesto de trabajo. Son mentes inquisitivas, siempre buscando nuevas ideas y perspectivas. Sin embargo, su tendencia a la indecisión y la volatilidad a veces puede chocar con los signos de tierra, que valoran la estabilidad y la planificación. A pesar de esto, su capacidad para comunicarse y adaptarse los hace expertos en construir puentes en las relaciones interelementales, encontrando un terreno común para crecer juntos.";
+                } else if (valor == "tierra"){
+                    about =
+                        "<em>Con signo de tierra (Tauro, Virgo, Capricornio)</em>: Son conocidos por su pragmatismo y estabilidad. Son personas trabajadoras, realistas y enfocadas en la materialización de sus objetivos. Su conexión con la tierra les brinda un sentido sólido de seguridad y les ayuda a construir bases sólidas en sus vidas. Su firmeza puede chocar con los signos de fuego, que buscan aventuras y cambios rápidos. Sin embargo, su naturaleza terrenal crea un terreno firme para cultivar relaciones sólidas, especialmente con signos de agua, que valoran su estabilidad y aprecian su enfoque realista.";
+                } else {
+                    about = "Diseño y nuevos medios."
+                }
+
+                detalles.innerHTML += `<div><p>${about}</p></div>`;
+
+                datos.forEach((x) => {
+                    if (valor == x.zodiaco.elemento) {
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                    }
+                });
+            }
+
+            const seleccionado = document.querySelectorAll('input[name="selecciona"]');
+
+            seleccionado.forEach((i) => {
+                i.addEventListener("change", function () {
+                    var valor = this.value;
+                    if (valor !== "todos"){
+                        console.log(valor);
+                        compatibilidad(valor);
+                    } else {
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
